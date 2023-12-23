@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:developer';
 
+import 'package:ecommerce/screens/homePage.dart';
 import 'package:ecommerce/screens/register.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,7 +19,6 @@ class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-
   @override
   void initState() {
     // TODO: implement initState
@@ -31,13 +32,13 @@ class _LoginPageState extends State<LoginPage> {
     bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
     log("isLoggedIn = " + isLoggedIn.toString());
     if (isLoggedIn) {
-     // Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));
+       Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));
     }
   }
 
   //!login fn
 
-  logIn(String username, String password) async{
+  logIn(String username, String password) async {
     print("webservices");
     print(username);
     print(password);
@@ -47,7 +48,30 @@ class _LoginPageState extends State<LoginPage> {
       'password': password,
     };
 
-   ;//final response = await http.post(Uri.parse())
+    final response = await http.post(
+      Uri.parse("http://bootcamp.cyralearnings.com/login.php"),
+      body: loginData,
+    );
+
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      if (response.body.contains("success")) {
+        print("Login successfully completed");
+
+        // Update the isLoggedIn status in SharedPreferences
+        final prefs = await SharedPreferences.getInstance();
+        prefs.setBool("isLoggedIn", true);
+        prefs.setString("username", username);
+
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => const HomePage()));
+      } else {
+        print("login failed");
+      }
+    } else {
+      result = {log(json.decode(response.body)['error'].toString())};
+    }
+    return result;
   }
 
   @override
@@ -168,6 +192,7 @@ class _LoginPageState extends State<LoginPage> {
                             if (_formKey.currentState!.validate()) {
                               log("Username = " + username.toString());
                               log("Password = " + password.toString());
+                              logIn(username.toString(), password.toString());
                             }
                           },
                           style: TextButton.styleFrom(
