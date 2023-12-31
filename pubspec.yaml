@@ -31,8 +31,10 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter
-  http: 
+  gap: ^3.0.1
+  http: null
   shared_preferences: ^2.2.2
+  staggered_grid_view_flutter: ^0.0.4
 
 dev_dependencies:
   flutter_lints: ^2.0.0
