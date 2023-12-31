@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:ecommerce/core/constants.dart';
+import 'package:ecommerce/webservice/webservices.dart';
 import 'package:ecommerce/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -51,42 +52,52 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(
                 height: 10,
               ),
-              Container(
-                //color: const Color.fromARGB(255, 29, 12, 11),
-                height: 80,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 12,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: InkWell(
-                        onTap: () {
-                          log("clicked");
-                        },
-                        child: Container(
-                          height: 30,
-                          //width: 40,
-                          //color: Colors.red,
-                          padding: const EdgeInsets.all(15),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.grey[300],
-                          ),
-                          child: const Center(
-                            child: Text(
-                              "Categoey name",
-                              style: TextStyle(
-                                  color: mainColor,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold),
+              FutureBuilder(
+                future: WebSevices().fetchCategory(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Container(
+                      //color: const Color.fromARGB(255, 29, 12, 11),
+                      height: 80,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: InkWell(
+                              onTap: () {
+                                log("clicked");
+                              },
+                              child: Container(
+                                height: 30,
+                                //width: 40,
+                                //color: Colors.red,
+                                padding: const EdgeInsets.all(15),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.grey[300],
+                                ),
+                                child:  Center(
+                                  child: Text(
+                                    snapshot.data![index].category,
+                                    style: const TextStyle(
+                                        color: mainColor,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
+                          );
+                        },
                       ),
                     );
-                  },
-                ),
+                    
+                  } else {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                },
               ),
               const Gap(20),
               const Text(
