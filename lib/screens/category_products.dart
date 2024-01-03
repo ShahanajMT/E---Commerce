@@ -1,11 +1,21 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:developer';
 
+import 'package:ecommerce/webservice/webservices.dart';
 import 'package:flutter/material.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 
+// ignore: must_be_immutable
 class CategoryProductPage extends StatefulWidget {
-  const CategoryProductPage({super.key});
+  //! co
+  String catname;
+  int catid;
+  CategoryProductPage({
+    Key? key,
+    required this.catname,
+    required this.catid,
+  }) : super(key: key);
 
   @override
   State<CategoryProductPage> createState() => _CategoryProductPageState();
@@ -14,6 +24,8 @@ class CategoryProductPage extends StatefulWidget {
 class _CategoryProductPageState extends State<CategoryProductPage> {
   @override
   Widget build(BuildContext context) {
+    log('CatId : ${widget.catid.toString()}');
+    log('Catname : ${widget.catname.toString()}');
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
@@ -28,82 +40,112 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
             color: Colors.black,
           ),
         ),
-        title: const Text(
-          "Category name",
-          style: TextStyle(
-              fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+        title: Text(
+          widget.catname,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
         ),
       ),
-      body: StaggeredGridView.countBuilder(
-        crossAxisCount: 2,
-        shrinkWrap: true,
-        physics: const BouncingScrollPhysics(),
-        itemCount: 2,
-        itemBuilder: (context, index) {
-          return InkWell(
-            onTap: () {
-              log("clicked");
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15)),
-                child: Column(
-                  children: [
-                    ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(15),
-                        topRight: Radius.circular(15),
-                      ),
-                      child: Container(
-                        constraints: const BoxConstraints(
-                            minHeight: 100, maxHeight: 250),
-                        child: const Image(
-                            image: NetworkImage(
-                                "https://imgs.search.brave.com/7LMtg3VgYJf7eC0BFvRZa6En6jCP2q-0KO95BPaVI5c/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvMTgy/NDA0MzgwL3Bob3Rv/L21pbGl0YXJ5LWNv/bWJhdC1ib290cy5q/cGc_cz02MTJ4NjEy/Jnc9MCZrPTIwJmM9/WDUzN3JvZnFES2d1/cFRiVGkzZUdYV181/NzFucXBwdk1rUXl5/UGdlcTVUOD0")),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8),
+      body: FutureBuilder(
+        future: WebSevices().fetchCatProducts(widget.catid),
+        builder: (context, snapshot) {
+          log("length :${snapshot.data!.length}");
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            // Loading state
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            // Error state
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (snapshot.hasData && snapshot.data != null) {
+            // Data available state
+            log("length: ${snapshot.data!.length}");
+
+            return StaggeredGridView.countBuilder(
+              crossAxisCount: 2,
+              shrinkWrap: true,
+              physics: const BouncingScrollPhysics(),
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                //!
+                final product = snapshot.data![index];
+                return InkWell(
+                  onTap: () {
+                    log("clicked");
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15)),
                       child: Column(
                         children: [
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              textAlign: TextAlign.start,
-                              "Shoes",
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: Colors.grey.shade600,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16,
+                          ClipRRect(
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(15),
+                              topRight: Radius.circular(15),
+                            ),
+                            child: Container(
+                              constraints: const BoxConstraints(
+                                  minHeight: 100, maxHeight: 250),
+                              child: Image(
+                                image: NetworkImage(
+                                  WebSevices.imageUrl + product.image,
+                                ),
                               ),
                             ),
                           ),
-                          const Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Rs. 2000",
-                              style:  TextStyle(
-                                color: Colors.red,
-                                fontSize: 17,
-                                fontWeight: FontWeight.bold,
-                              ),
+                          Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Column(
+                              children: [
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                    textAlign: TextAlign.start,
+                                    product.productname,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: Colors.grey.shade600,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    "Rs. ${product.price}",
+                                    style: const TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
+                          )
                         ],
                       ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          );
+                    ),
+                  ),
+                );
+              },
+              staggeredTileBuilder: (context) => const StaggeredTile.fit(1),
+            );
+          } else {
+            // No data state
+            return const Center(child: Text('No data available'));
+          }
         },
-        staggeredTileBuilder: (context) => const StaggeredTile.fit(1),
       ),
     );
   }

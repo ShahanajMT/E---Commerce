@@ -4,12 +4,12 @@ import 'dart:developer';
 import 'package:ecommerce/models/category_model.dart';
 import 'package:ecommerce/models/product_model.dart';
 import 'package:http/http.dart' as http;
-class WebSevices {
 
+class WebSevices {
   static const imageUrl = 'https://bootcamp.cyralearnings.com/products/';
-  
+
   /* mainUrl */
-  static const  mainUrl = 'https://bootcamp.cyralearnings.com/';
+  static const mainUrl = 'https://bootcamp.cyralearnings.com/';
 
   //! fetchCategory
 
@@ -20,11 +20,13 @@ class WebSevices {
       if (response.statusCode == 200) {
         final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
 
-        return parsed.map<CategoryModel>((json) => CategoryModel.fromJson(json)).toList();
+        return parsed
+            .map<CategoryModel>((json) => CategoryModel.fromJson(json))
+            .toList();
       } else {
         throw Exception('Failed to load category');
       }
-    } catch(e) {
+    } catch (e) {
       log(e.toString());
     }
     return null;
@@ -34,16 +36,56 @@ class WebSevices {
 
   Future<List<ProductModel>?> fetchProducts() async {
     try {
-      final response = await http.get(Uri.parse('${mainUrl}view_offerproducts.php'));
+      final response =
+          await http.get(Uri.parse('${mainUrl}view_offerproducts.php'));
       if (response.statusCode == 200) {
         final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
-        return parsed.map<ProductModel>((json) => ProductModel.fromJson(json)).toList();
+        return parsed
+            .map<ProductModel>((json) => ProductModel.fromJson(json))
+            .toList();
       } else {
         throw Exception('Failed to load products');
       }
-    } catch(e) {
+    } catch (e) {
       log(e.toString());
     }
     return null;
+  }
+
+  //! fetchCatproducts
+  // Future<List<ProductModel>?> fetchCatProducts(int catid) async {
+  //   try {
+  //     final response = http.post(
+  //       Uri.parse('${mainUrl}get_category_products.php'),
+  //       body: {'catid' : catid.toString()}
+  //     );
+  //     log('Statuscode :' + response)
+  //   } catch (e) {
+  //     log(e.toString());
+  //   }
+  //   return null;
+  // }
+
+
+  Future<List<ProductModel>?> fetchCatProducts(int catid) async {
+    try {
+      final response =
+          await http.post(Uri.parse('${mainUrl}get_category_products.php'), body: {'catid' : catid.toString()});
+          log('Statuscode :${response.statusCode}');
+      if (response.statusCode == 200) {
+        log("catid in string");
+        log("response :${response.body}");
+        final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
+        return parsed
+            .map<ProductModel>((json) => ProductModel.fromJson(json))
+            .toList();
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+    return null;
+    
   }
 }

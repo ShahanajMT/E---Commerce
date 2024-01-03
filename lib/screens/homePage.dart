@@ -69,7 +69,7 @@ class _HomePageState extends State<HomePage> {
                             child: InkWell(
                               onTap: () {
                                 log("clicked");
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => const CategoryProductPage()));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) =>  CategoryProductPage(catid: snapshot.data![index].id, catname: snapshot.data![index].category,),),);
                               },
                               child: Container(
                                 height: 30,
@@ -126,7 +126,7 @@ class _HomePageState extends State<HomePage> {
                           itemCount: snapshot.data!.length,
                           itemBuilder: (context, index) {
                             final product = snapshot.data![index];
-                            print(product.image);
+                            log(product.image);
                             return InkWell(
                               onTap: () {
                                 log("clicked");
@@ -151,7 +151,6 @@ class _HomePageState extends State<HomePage> {
                                               minHeight: 100, maxWidth: 250),
                                           child: Image(
                                             image: NetworkImage(
-                                            // 'https://bootcamp.cyralearnings.com/${product.image}',
                                             WebSevices.imageUrl + product.image
                                              
                                             ),
@@ -198,8 +197,7 @@ class _HomePageState extends State<HomePage> {
                           staggeredTileBuilder: (context) =>
                               const StaggeredTile.fit(1),
                         ),
-                        //   );
-                        // }
+                        
                       );
                     } else {
                       return const Center(child: CircularProgressIndicator());
