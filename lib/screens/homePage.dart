@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:ecommerce/core/constants.dart';
+import 'package:ecommerce/screens/category_products.dart';
 import 'package:ecommerce/webservice/webservices.dart';
 import 'package:ecommerce/widgets/drawer.dart';
 import 'package:flutter/material.dart';
@@ -68,6 +69,7 @@ class _HomePageState extends State<HomePage> {
                             child: InkWell(
                               onTap: () {
                                 log("clicked");
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => const CategoryProductPage()));
                               },
                               child: Container(
                                 height: 30,
@@ -78,7 +80,7 @@ class _HomePageState extends State<HomePage> {
                                   borderRadius: BorderRadius.circular(10),
                                   color: Colors.grey[300],
                                 ),
-                                child:  Center(
+                                child: Center(
                                   child: Text(
                                     snapshot.data![index].category,
                                     style: const TextStyle(
@@ -93,7 +95,6 @@ class _HomePageState extends State<HomePage> {
                         },
                       ),
                     );
-                    
                   } else {
                     return const Center(child: CircularProgressIndicator());
                   }
@@ -108,82 +109,102 @@ class _HomePageState extends State<HomePage> {
                     fontWeight: FontWeight.bold),
               ),
               const Gap(20),
+
+              //! viewProducts
               Expanded(
-                child: Container(
-                  child: StaggeredGridView.countBuilder(
-                    scrollDirection: Axis.vertical,
-                    physics: const BouncingScrollPhysics(),
-                    shrinkWrap: true,
-                    crossAxisCount: 2,
-                    itemCount: 12,
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                        onTap: () {
-                          log("clicked");
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Column(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(15),
-                                    topRight: Radius.circular(15),
+                child: FutureBuilder(
+                  future: WebSevices().fetchProducts(),
+                  builder: (context, snapshot) {
+                    log("Product legnth == ${snapshot.data!.length}");
+                    if (snapshot.hasData) {
+                      return Container(
+                        child: StaggeredGridView.countBuilder(
+                          scrollDirection: Axis.vertical,
+                          physics: const BouncingScrollPhysics(),
+                          shrinkWrap: true,
+                          crossAxisCount: 2,
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, index) {
+                            final product = snapshot.data![index];
+                            print(product.image);
+                            return InkWell(
+                              onTap: () {
+                                log("clicked");
+                                
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(15),
                                   ),
-                                  child: Container(
-                                    constraints: const BoxConstraints(
-                                        minHeight: 100, maxWidth: 250),
-                                    child: const Image(
-                                      image: NetworkImage(
-                                          "https://images.pexels.com/photos/1124466/pexels-photo-1124466.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8),
                                   child: Column(
                                     children: [
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          "Shoes",
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            color: Colors.grey.shade600,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
+                                      ClipRRect(
+                                        borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(15),
+                                          topRight: Radius.circular(15),
+                                        ),
+                                        child: Container(
+                                          constraints: const BoxConstraints(
+                                              minHeight: 100, maxWidth: 250),
+                                          child: Image(
+                                            image: NetworkImage(
+                                            // 'https://bootcamp.cyralearnings.com/${product.image}',
+                                            WebSevices.imageUrl + product.image
+                                             
+                                            ),
                                           ),
                                         ),
                                       ),
-                                      const Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          "Rs. " + "2000",
-                                          style: TextStyle(
-                                            color: Colors.red,
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8),
+                                        child: Column(
+                                          children: [
+                                            Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                product.productname,
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  color: Colors.grey.shade600,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                            Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                "Rs. ${product.price}",
+                                                style: const TextStyle(
+                                                  color: Colors.red,
+                                                  fontSize: 17,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
+                              ),
+                            );
+                          },
+                          staggeredTileBuilder: (context) =>
+                              const StaggeredTile.fit(1),
                         ),
+                        //   );
+                        // }
                       );
-                    },
-                    staggeredTileBuilder: (context) =>
-                        const StaggeredTile.fit(1),
-                  ),
+                    } else {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                  },
                 ),
               ),
             ],
