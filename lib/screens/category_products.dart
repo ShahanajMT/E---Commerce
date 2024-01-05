@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:developer';
 
+import 'package:ecommerce/screens/details_page.dart';
 import 'package:ecommerce/webservice/webservices.dart';
 import 'package:flutter/material.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
@@ -77,6 +78,14 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
                 return InkWell(
                   onTap: () {
                     log("clicked");
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return DetailsPage(id: product.id, name: product.productname, price: product.price, image: WebSevices.imageUrl + product.image, description: product.description);
+                        },
+                      ),
+                    );
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(8),

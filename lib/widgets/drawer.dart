@@ -1,4 +1,5 @@
 import 'package:ecommerce/core/constants.dart';
+import 'package:ecommerce/screens/cartPage.dart';
 import 'package:ecommerce/screens/login.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -45,6 +46,17 @@ class DrawerWidget extends StatelessWidget {
               leading:  Icon(Icons.book_online),
               title: Text("Order Details", style: TextStyle(fontSize: 17),),
               trailing: Icon(Icons.arrow_forward_ios_rounded, size: 15,),
+            ),
+
+            InkWell(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const CartPage()));
+              },
+              child: const ListTile(
+                leading:  Icon(Icons.local_grocery_store),
+                title: Text("Cart", style: TextStyle(fontSize: 17),),
+                trailing: Icon(Icons.arrow_forward_ios_rounded, size: 15,),
+              ),
             ),
 
             const Divider(),

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:ecommerce/core/constants.dart';
 import 'package:ecommerce/screens/category_products.dart';
+import 'package:ecommerce/screens/details_page.dart';
 import 'package:ecommerce/webservice/webservices.dart';
 import 'package:ecommerce/widgets/drawer.dart';
 import 'package:flutter/material.dart';
@@ -69,7 +70,15 @@ class _HomePageState extends State<HomePage> {
                             child: InkWell(
                               onTap: () {
                                 log("clicked");
-                                Navigator.push(context, MaterialPageRoute(builder: (context) =>  CategoryProductPage(catid: snapshot.data![index].id, catname: snapshot.data![index].category,),),);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CategoryProductPage(
+                                      catid: snapshot.data![index].id,
+                                      catname: snapshot.data![index].category,
+                                    ),
+                                  ),
+                                );
                               },
                               child: Container(
                                 height: 30,
@@ -130,7 +139,21 @@ class _HomePageState extends State<HomePage> {
                             return InkWell(
                               onTap: () {
                                 log("clicked");
-                                
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return DetailsPage(
+                                        id: product.id,
+                                        name: product.productname,
+                                        price: product.price,
+                                        image:
+                                            WebSevices.imageUrl + product.image,
+                                        description: product.description,
+                                      );
+                                    },
+                                  ),
+                                );
                               },
                               child: Padding(
                                 padding: const EdgeInsets.all(8),
@@ -151,9 +174,8 @@ class _HomePageState extends State<HomePage> {
                                               minHeight: 100, maxWidth: 250),
                                           child: Image(
                                             image: NetworkImage(
-                                            WebSevices.imageUrl + product.image
-                                             
-                                            ),
+                                                WebSevices.imageUrl +
+                                                    product.image),
                                           ),
                                         ),
                                       ),
@@ -197,7 +219,6 @@ class _HomePageState extends State<HomePage> {
                           staggeredTileBuilder: (context) =>
                               const StaggeredTile.fit(1),
                         ),
-                        
                       );
                     } else {
                       return const Center(child: CircularProgressIndicator());
