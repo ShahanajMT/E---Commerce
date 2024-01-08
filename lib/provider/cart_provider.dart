@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class Cart extends ChangeNotifier {
   final List<CartProduct> _list = [];
-  List<CartProduct> get getItem {
+  List<CartProduct> get getItems {
     return _list;
   }
 

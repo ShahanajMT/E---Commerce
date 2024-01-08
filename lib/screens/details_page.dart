@@ -133,7 +133,7 @@ class DetailsPage extends StatelessWidget {
                               log('Price' + price.toString());
                               var existingItemCart = context
                                   .read<Cart>()
-                                  .getItem
+                                  .getItems
                                   .firstWhereOrNull(
                                       (element) => element.id == id);
                               log('existingItemCart -----$existingItemCart');

@@ -1,11 +1,15 @@
+import 'package:ecommerce/provider/cart_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:provider/provider.dart';
 
 class CartPage extends StatelessWidget {
   const CartPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    //! tostore
+    List<CartProduct> cartList = [];
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.grey.shade100,
@@ -31,8 +35,11 @@ class CartPage extends StatelessWidget {
             ),
           ),
           actions: [
+            context.watch<Cart>().getItems.isEmpty ? const SizedBox() :
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                context.read<Cart>().clearCart();
+              },
               icon: const Icon(
                 Icons.delete,
                 color: Colors.red,
@@ -41,127 +48,169 @@ class CartPage extends StatelessWidget {
             ),
           ],
         ),
-        body: Container(
-          margin: const EdgeInsets.all(10),
-          //color: Colors.red,
-          child: ListView.builder(
-            itemCount: 2,
-            itemBuilder: (context, index) {
-              return Card(
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Container(
-                  height: 120,
-                  // color: Colors.yellow,
-                  child: Row(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.all(10),
-                        //color: Colors.black,
-                        height: 80,
-                        width: 100,
-                        child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              image: const DecorationImage(
-                                  image: NetworkImage(
-                                      'https://imgs.search.brave.com/ltJxRVJA0FGir3sC3gvVHUkKmVEFrp4Hh2FD-P0rt5o/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9pLmV0/c3lzdGF0aWMuY29t/LzQ1MDg1OTU1L3Iv/aWwvZDgwNTYzLzU0/NTc3MDM5OTMvaWxf/NjAweDYwMC41NDU3/NzAzOTkzX2R2bmgu/anBn'),
-                                  fit: BoxFit.fill)),
-                        ),
-                      ),
-                      //!
-                      Flexible(
-                        child: Container(
-                          //color: Colors.cyan,
-                          margin: const EdgeInsets.only(
-                            top: 20,
-                            left: 10,
+        body: context.watch<Cart>().getItems.isEmpty
+            ? const Center(
+                child: Text('Cart Is Empty'),
+              )
+            : Consumer<Cart>(
+                builder: (context, cart, child) {
+                  cartList = cart.getItems;
+                  print(cartList);
+                  return Container(
+                    margin: const EdgeInsets.all(10),
+                    child: ListView.builder(
+                      itemCount: cart.count,
+                      itemBuilder: (context, index) {
+                        return Card(
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
                           ),
-                          child: Wrap(
-                            children: [
-                              const Text(
-                                'Product name ..............',
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                              //Gap(10),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  top: 7,
-                                  //left: 7,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      '2000',
-                                      // maxLines: 2,
-                                      // overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.red,
+                          child: Container(
+                            height: 120,
+                            // color: Colors.yellow,
+                            child: Row(
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.all(10),
+                                  //color: Colors.black,
+                                  height: 80,
+                                  width: 100,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                      image: DecorationImage(
+                                        image: NetworkImage(
+                                          cartList[index].imageUrl!,
+                                          // 'https://imgs.search.brave.com/ltJxRVJA0FGir3sC3gvVHUkKmVEFrp4Hh2FD-P0rt5o/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9pLmV0/c3lzdGF0aWMuY29t/LzQ1MDg1OTU1L3Iv/aWwvZDgwNTYzLzU0/NTc3MDM5OTMvaWxf/NjAweDYwMC41NDU3/NzAzOTkzX2R2bmgu/anBn',
+                                        ),
+                                        fit: BoxFit.fill,
                                       ),
                                     ),
-                                    Container(
-                                      margin: const EdgeInsets.only(right: 5),
-                                      height: 35,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color: Colors.grey.shade300,
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          IconButton(
-                                            onPressed: () {},
-                                            icon: const Icon(
-                                              Icons.minimize_rounded,
-                                              size: 18,
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                          const Gap(6),
-                                          const Text(
-                                            '2',
-                                            style: TextStyle(
-                                                color: Colors.red,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                          IconButton(
-                                            onPressed: () {},
-                                            icon: const Icon(
-                                              Icons.add,
-                                              size: 18,
-                                              color: Colors.black,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                              )
-                            ],
+                                //!
+                                Flexible(
+                                  child: Container(
+                                    //color: Colors.cyan,
+                                    margin: const EdgeInsets.only(
+                                      top: 20,
+                                      left: 10,
+                                    ),
+                                    child: Wrap(
+                                      children: [
+                                        Text(
+                                          cartList[index].name!,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        //Gap(10),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            top: 7,
+                                            //left: 7,
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                cartList[index]
+                                                    .price
+                                                    .toString(),
+                                                // maxLines: 2,
+                                                // overflow: TextOverflow.ellipsis,
+                                                style: const TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.red,
+                                                ),
+                                              ),
+                                              Container(
+                                                margin: const EdgeInsets.only(
+                                                    right: 5),
+                                                height: 35,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  color: Colors.grey.shade300,
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    IconButton(
+                                                      onPressed: () {
+                                                        cartList[index].qty == 1
+                                                            ? cart.removeItem(
+                                                                cartList[index])
+                                                            : cart.reduceByOne(
+                                                                cartList[
+                                                                    index]);
+                                                      },
+                                                      icon: cartList[index]
+                                                                  .qty ==
+                                                              1
+                                                          ? const Icon(
+                                                              Icons.delete,
+                                                              size: 18,
+                                                              color:
+                                                                  Colors.black,
+                                                            )
+                                                          : const Icon(
+                                                              Icons
+                                                                  .minimize_rounded,
+                                                              size: 18,
+                                                              color:
+                                                                  Colors.black,
+                                                            ),
+                                                    ),
+                                                    const Gap(6),
+                                                    Text(
+                                                      cartList[index]
+                                                          .qty
+                                                          .toString(),
+                                                      style: const TextStyle(
+                                                          color: Colors.red,
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.w600),
+                                                    ),
+                                                    IconButton(
+                                                      onPressed: () {
+                                                        cart.increment(
+                                                            cartList[index]);
+                                                      },
+                                                      icon: const Icon(
+                                                        Icons.add,
+                                                        size: 18,
+                                                        color: Colors.black,
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
         bottomSheet: Padding(
           padding: const EdgeInsets.all(10),
           //height: 70,
@@ -169,18 +218,16 @@ class CartPage extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Total : ${'2000'}',
-                style: TextStyle(
+               Text(
+                'Total : ${context.watch<Cart>().totalPrice.toString()}',
+                style: const TextStyle(
                   color: Colors.red,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               InkWell(
-                onTap: () {
-                  
-                },
+                onTap: () {},
                 child: Container(
                   height: 50,
                   width: MediaQuery.of(context).size.width / 2.2,
