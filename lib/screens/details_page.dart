@@ -98,9 +98,10 @@ class DetailsPage extends StatelessWidget {
                               // ignore: prefer_interpolation_to_compose_strings
                               'Rs. ' + price.toString(),
                               style: const TextStyle(
-                                  color: Colors.red,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold),
+                                color: Colors.red,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                           const SizedBox(

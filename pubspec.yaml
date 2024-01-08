@@ -33,6 +33,7 @@ dependencies:
     sdk: flutter
   gap: ^3.0.1
   http: null
+  provider: ^6.1.1
   shared_preferences: ^2.2.2
   staggered_grid_view_flutter: ^0.0.4
 
