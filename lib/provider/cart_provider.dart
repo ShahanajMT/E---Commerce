@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 class Cart extends ChangeNotifier {
@@ -37,6 +39,8 @@ class Cart extends ChangeNotifier {
 
     _list.add(product);
     notifyListeners();
+
+    log("# -------- Add Product --------- # ");
   }
 
   void increment(CartProduct product) {

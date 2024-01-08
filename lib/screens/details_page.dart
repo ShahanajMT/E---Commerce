@@ -1,10 +1,16 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:developer';
+
+import 'package:collection/collection.dart';
 import 'package:ecommerce/screens/homePage.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:provider/provider.dart';
 
+import '../provider/cart_provider.dart';
 import 'cartPage.dart';
 
+// ignore: must_be_immutable
 class DetailsPage extends StatelessWidget {
   int id;
   String name;
@@ -122,10 +128,64 @@ class DetailsPage extends StatelessWidget {
                           const Gap(50),
                           InkWell(
                             onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const CartPage()));
+                              //log('Price : ${double.parse(price as String)}');
+                              // ignore: prefer_interpolation_to_compose_strings
+                              log('Price' + price.toString());
+                              var existingItemCart = context
+                                  .read<Cart>()
+                                  .getItem
+                                  .firstWhereOrNull(
+                                      (element) => element.id == id);
+                              log('existingItemCart -----$existingItemCart');
+                              if (existingItemCart != null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    duration: Duration(seconds: 3),
+                                    behavior: SnackBarBehavior.floating,
+                                    padding: EdgeInsets.all(15),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10),
+                                      ),
+                                    ),
+                                    content: Text(
+                                      'This item already in cart',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                context
+                                    .read<Cart>()
+                                    .addItem(id, name, price, 1, image);
+
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    duration: Duration(seconds: 3),
+                                    behavior: SnackBarBehavior.floating,
+                                    padding: EdgeInsets.all(15),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10),
+                                      ),
+                                    ),
+                                    content: Text(
+                                      'Added to cart !!!',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
                             },
                             child: Container(
                               height: 50,
