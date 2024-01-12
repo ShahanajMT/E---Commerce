@@ -5,6 +5,8 @@ import 'package:ecommerce/models/category_model.dart';
 import 'package:ecommerce/models/product_model.dart';
 import 'package:http/http.dart' as http;
 
+import '../models/user_model.dart';
+
 class WebSevices {
   static const imageUrl = 'https://bootcamp.cyralearnings.com/products/';
 
@@ -87,5 +89,23 @@ class WebSevices {
     }
     return null;
     
+  }
+
+
+  //! fetchUser
+  Future<UserModel?> fetchUser(String username) async {
+    try {
+      final response = await http.post(Uri.parse('${mainUrl}get_user.php'), body: {'username' : username});
+      log('Statuscode :${response.statusCode}');
+      if (response.statusCode == 200) {
+        return UserModel.fromJson(jsonDecode(response.body));
+      } else {
+        throw Exception('Failed to load fetch user!');
+      }
+
+    } catch(e) {
+      log(e.toString());
+    }
+    return null;
   }
 }

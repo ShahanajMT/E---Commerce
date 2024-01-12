@@ -116,7 +116,7 @@ class DetailsPage extends StatelessWidget {
                           Flexible(
                             child: Text(
                               description,
-                              textAlign: TextAlign.start,
+                              textAlign: TextAlign.justify,
                               textScaleFactor: 1.1,
                               style: const TextStyle(
                                 fontSize: 15,

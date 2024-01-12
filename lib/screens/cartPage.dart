@@ -1,4 +1,5 @@
 import 'package:ecommerce/provider/cart_provider.dart';
+import 'package:ecommerce/screens/checkoutPage.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
@@ -35,17 +36,18 @@ class CartPage extends StatelessWidget {
             ),
           ),
           actions: [
-            context.watch<Cart>().getItems.isEmpty ? const SizedBox() :
-            IconButton(
-              onPressed: () {
-                context.read<Cart>().clearCart();
-              },
-              icon: const Icon(
-                Icons.delete,
-                color: Colors.red,
-                size: 30,
-              ),
-            ),
+            context.watch<Cart>().getItems.isEmpty
+                ? const SizedBox()
+                : IconButton(
+                    onPressed: () {
+                      context.read<Cart>().clearCart();
+                    },
+                    icon: const Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                      size: 30,
+                    ),
+                  ),
           ],
         ),
         body: context.watch<Cart>().getItems.isEmpty
@@ -218,7 +220,7 @@ class CartPage extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-               Text(
+              Text(
                 'Total : ${context.watch<Cart>().totalPrice.toString()}',
                 style: const TextStyle(
                   color: Colors.red,
@@ -227,7 +229,22 @@ class CartPage extends StatelessWidget {
                 ),
               ),
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  context.read<Cart>().getItems.isEmpty
+                      ? ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            duration: Duration(seconds: 3),
+                            behavior: SnackBarBehavior.fixed,
+                            padding: EdgeInsets.all(15),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+                            content: Text('Cart Is Empty!', textAlign: TextAlign.center, style: TextStyle(fontSize: 18, color: Colors.white),),
+                          ),
+                        )
+                      : Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>  CheckOutPage(cart: cartList,)),);
+                },
                 child: Container(
                   height: 50,
                   width: MediaQuery.of(context).size.width / 2.2,
