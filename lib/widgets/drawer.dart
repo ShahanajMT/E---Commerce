@@ -98,23 +98,30 @@ class DrawerWidget extends StatelessWidget {
               ),
             ),
             const Divider(),
-            ListTile(
-              leading: const Icon(Icons.exit_to_app),
-              title: const Text(
-                "LogOut",
-                style: TextStyle(fontSize: 17),
-              ),
-              trailing: const Icon(
-                Icons.arrow_forward_ios_rounded,
-                size: 15,
-              ),
-              onTap: () async {
+            InkWell(
+              onTap: () async{
                 final prefs = await SharedPreferences.getInstance();
-
                 prefs.setBool("isLoggedIn", false);
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => LoginPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage()));
               },
+              child: ListTile(
+                leading: const Icon(Icons.exit_to_app),
+                title: const Text(
+                  "LogOut",
+                  style: TextStyle(fontSize: 17),
+                ),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 15,
+                ),
+                onTap: () async {
+                  final prefs = await SharedPreferences.getInstance();
+            
+                  prefs.setBool("isLoggedIn", false);
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => LoginPage()));
+                },
+              ),
             ),
           ],
         ),

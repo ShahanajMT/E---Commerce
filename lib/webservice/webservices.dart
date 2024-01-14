@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:ecommerce/models/category_model.dart';
+import 'package:ecommerce/models/order_model.dart';
 import 'package:ecommerce/models/product_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -103,6 +104,27 @@ class WebSevices {
         throw Exception('Failed to load fetch user!');
       }
 
+    } catch(e) {
+      log(e.toString());
+    }
+    return null;
+  }
+
+  //! fetchOrderDetails
+  Future<List<OrderModel>?> fetchOrderDeatils(String username) async {
+    log('Username $username');
+    try {
+      final response = await http.post(Uri.parse('${mainUrl}get_orderdetails.php'), body: {'username' : username.toString()});
+      log(response.body);
+
+
+      if (response.statusCode == 200) {
+        final parsed = json.decode(response.body).cast<Map<String, dynamic>> ();
+       // log(parsed);
+        return parsed.map<OrderModel>((json) => OrderModel.fromJson(json)).toList();
+      } else {
+        throw Exception('Failed to load order details');
+      }
     } catch(e) {
       log(e.toString());
     }

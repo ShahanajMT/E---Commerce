@@ -54,7 +54,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
       username = prefs.getString('username');
     });
 
-    log('isLoggedIn$username');
+    log('isLoggedIn $username');
   }
 
   //! orderPlace details with user
@@ -73,14 +73,14 @@ class _CheckOutPageState extends State<CheckOutPage> {
     final vm = Provider.of<Cart>(context, listen: false);
 
     final response = await http.post(
-      Uri.parse('${WebSevices.mainUrl}get_orderdetails.php'),
+      Uri.parse('${WebSevices.mainUrl}order.php'),
       body: {
         'username': username,
         'amount': amount,
         'paymentmethod': paymentmethod,
         'date': date,
         'quantity': vm.count.toString(),
-        'cart': cart,
+        'cart': jsondata,
         'name': name,
         'address': address,
         'phone': phone,
@@ -88,8 +88,11 @@ class _CheckOutPageState extends State<CheckOutPage> {
     );
 
     if (response.statusCode == 200) {
+      log('00000000');
       log(response.body);
-      if (response.body.contains("Success")) {
+      log('1010101');
+      if (response.body.contains('Success')) {
+        log('1111111');
         vm.clearCart();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
