@@ -2,7 +2,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
-
+import 'package:ecommerce/screens/razorPay.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:http/http.dart' as http;
@@ -17,21 +17,18 @@ import '../provider/cart_provider.dart';
 // ignore: must_be_immutable
 class CheckOutPage extends StatefulWidget {
   List<CartProduct> cart;
-   CheckOutPage({
+  CheckOutPage({
     Key? key,
     required this.cart,
   }) : super(key: key);
-  
-  //List<CartProduct> get cart => null;
 
-  
+  //List<CartProduct> get cart => null;
 
   @override
   State<CheckOutPage> createState() => _CheckOutPageState();
 }
 
 class _CheckOutPageState extends State<CheckOutPage> {
-  
   int selectedValue = 1;
   String? name;
   String? phone;
@@ -98,7 +95,8 @@ class _CheckOutPageState extends State<CheckOutPage> {
           SnackBar(
             duration: const Duration(seconds: 3),
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             content: const Text(
               'YOUR ORDER SUCCESSFULLY COMPLETED',
               textAlign: TextAlign.center,
@@ -108,10 +106,10 @@ class _CheckOutPageState extends State<CheckOutPage> {
               ),
             ),
           ),
-          
         );
         // ignore: use_build_context_synchronously
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => const HomePage()));
       }
     }
   }
@@ -284,7 +282,21 @@ class _CheckOutPageState extends State<CheckOutPage> {
             onTap: () {
               String datetime = DateTime.now().toString();
               log(datetime.toString());
-               orderplace(widget.cart, vm.totalPrice.toString(), paymentmethod, datetime, name, address, phone);
+
+              if (paymentmethod == "Online") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return PaymentScreen(cart: widget.cart, amount: vm.totalPrice.toString(), paymentmethod: paymentmethod.toString(), date: datetime.toString(), name: name.toString(), address: address.toString(), phone: phone.toString());
+                    },
+                  ),
+                );
+              } else if ( paymentmethod == "Cash on delivery"){
+                orderplace(widget.cart, vm.totalPrice.toString(), paymentmethod,
+                  datetime, name, address, phone);
+              }
+              
             },
             child: Container(
               decoration: BoxDecoration(
