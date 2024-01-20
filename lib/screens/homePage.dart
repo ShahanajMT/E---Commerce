@@ -124,7 +124,7 @@ class _HomePageState extends State<HomePage> {
                 child: FutureBuilder(
                   future: WebSevices().fetchProducts(),
                   builder: (context, snapshot) {
-                    log("Product legnth == ${snapshot.data!.length}");
+                    // log("Product legnth == ${snapshot.data!.length}");
                     if (snapshot.hasData) {
                       return Container(
                         child: StaggeredGridView.countBuilder(

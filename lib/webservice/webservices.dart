@@ -55,20 +55,7 @@ class WebSevices {
     return null;
   }
 
-  //! fetchCatproducts
-  // Future<List<ProductModel>?> fetchCatProducts(int catid) async {
-  //   try {
-  //     final response = http.post(
-  //       Uri.parse('${mainUrl}get_category_products.php'),
-  //       body: {'catid' : catid.toString()}
-  //     );
-  //     log('Statuscode :' + response)
-  //   } catch (e) {
-  //     log(e.toString());
-  //   }
-  //   return null;
-  // }
-
+  
 
   Future<List<ProductModel>?> fetchCatProducts(int catid) async {
     try {

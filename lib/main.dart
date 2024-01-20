@@ -1,5 +1,6 @@
 import 'package:ecommerce/provider/cart_provider.dart';
 import 'package:ecommerce/screens/login.dart';
+import 'package:ecommerce/screens/spashscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Ecommerce',
       theme: ThemeData(),
-      home: const LoginPage(),
+      home: const SplashScreen(),
     );
   }
 }

@@ -152,7 +152,7 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
             );
           } else {
             // No data state
-            return const Center(child: Text('No data available'));
+            return const Center(child: CircularProgressIndicator());
           }
         },
       ),
